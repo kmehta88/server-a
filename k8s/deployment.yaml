@@ -15,7 +15,7 @@ spec:
       containers:
       - name: server-a
         image: service-a:latest
-        imagePullPolicy: Never # Crucial for Docker Desktop local images
+        imagePullPolicy: IfNotPresent # Crucial for Docker Desktop local images
         ports:
         - containerPort: 5000
 ---
