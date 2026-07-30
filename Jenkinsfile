@@ -2,11 +2,10 @@ pipeline {
     agent any
     
     stages {
-        stage('Build Docker Image') {
+        stage('Build & Push to Local Registry') {
             steps {
-                sh 'docker build -t server-a:latest .'
-                // Load the freshly built image directly into your kind cluster
-                sh 'kind load docker-image server-a:latest --name desktop || true'
+                sh 'docker build -t host.docker.internal:5001/server-a:latest .'
+                sh 'docker push host.docker.internal:5001/server-a:latest'
             }
         }
         
