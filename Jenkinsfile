@@ -2,12 +2,6 @@ pipeline {
     agent any
     
     stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'main', url: 'https://github.com/kmehta88/server-a.git'
-            }
-        }
-        
         stage('Build Docker Image') {
             steps {
                 sh 'docker build -t server-a:latest .'
@@ -16,8 +10,9 @@ pipeline {
         
         stage('Deploy to Kubernetes') {
             steps {
-                sh 'kubectl apply -f k8s/deployment.yaml'
-                sh 'kubectl rollout restart deployment/server-a'
+                // Pass host.docker.internal and disable TLS verification for local dev
+                sh 'kubectl apply -f k8s/deployment.yaml --server=https://host.docker.internal:63829 --insecure-skip-tls-verify=true'
+                sh 'kubectl rollout restart deployment/server-a --server=https://host.docker.internal:63829 --insecure-skip-tls-verify=true'
             }
         }
     }
